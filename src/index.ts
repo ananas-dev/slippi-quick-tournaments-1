@@ -1,7 +1,7 @@
 import * as express from "express";
 import * as http from "http";
 import * as WebSocket from "ws";
-import type {} from "./@types/types";
+import type {} from "./types/types";
 
 const app = express();
 
