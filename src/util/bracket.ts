@@ -1,20 +1,39 @@
 import type { Player, Bracket } from "../types/types";
 
+interface Node<T> {
+  pointer?: number;
+  data?: T;
+  right?: Node<T>;
+  left?: Node<T>;
+}
+
 const create = (players: Player[], size: number): any => {
   if (size <= players.length) return;
 
   // ensure to only have the desired number
   players = players.slice(0, size - 1);
 
-  let bracket: Bracket = {
-    matches: [],
-  };
+  let nodes: Node<Player>[] = [];
+  let queue: number[] = [];
 
-  const rounds = Math.log(size) / Math.log(2) - 1;
-  // u(n+1) = u(n) * 1/2
-  const total_matches = (size * ((1 - Math.pow(1 / 2, rounds)) * 2)) / 2;
-  const get_matches_number = (round: number, size: number) => size / round / 2;
-  for (let i = 0; i < rounds; i++) {}
+  players.map((player: Player, iter: number) => {
+    nodes.push({
+      pointer: iter,
+      data: player,
+    });
+    queue.push(iter);
+  });
 
-  players.map((player, index) => {});
+  while (queue.length > 1) {
+    let left = queue.pop();
+    let right = queue.pop();
+
+    nodes.push({
+      pointer: queue.length,
+      left: nodes[left || 0],
+      right: nodes[right || 0],
+    });
+
+    queue.push(queue.length);
+  }
 };
