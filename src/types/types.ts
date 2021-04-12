@@ -4,11 +4,6 @@ export interface TournamentMode {
   player_number: number;
 }
 
-export interface Queue {
-  mode: TournamentMode;
-  players: Player;
-}
-
 export interface Tournament {
   mode: TournamentMode;
   bracket: Bracket;
@@ -24,8 +19,9 @@ export interface Player {
 export interface Match {
   id: number;
   players: Player[];
+  round: number;
   winner?: Player;
-  next_match_id?: Number;
+  next_match?: number;
 }
 
 export interface Bracket {

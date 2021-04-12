@@ -1,4 +1,6 @@
 import { success, error } from "./responders";
+import { connect } from "./commands";
+import type { Player } from "./types/types";
 
 // Commands with args
 
@@ -10,18 +12,14 @@ interface QueueCommand {
   mode: string;
 }
 
-export function handleMessage(message: string): string {
-  const args = message.split(" ");
-  let response: any;
+export function handleMessage(req: string): string {
+  const json = JSON.parse(req);
+  let res: any;
 
-  switch (args[0]) {
+  switch (json.command) {
     case "connect":
-      if (args[1]) {
-        response = success();
-      } else {
-        response = error("missing id");
-      }
+      connect(json.data);
   }
 
-  return JSON.stringify(response);
+  return JSON.stringify(res);
 }
