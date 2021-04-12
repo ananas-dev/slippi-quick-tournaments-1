@@ -1,16 +1,5 @@
 import { success, error } from "./responders";
 import { connect } from "./commands";
-import type { Player } from "./types/types";
-
-// Commands with args
-
-interface ConnectCommand {
-  id: number;
-}
-
-interface QueueCommand {
-  mode: string;
-}
 
 export function handleMessage(req: string): string {
   const json = JSON.parse(req);

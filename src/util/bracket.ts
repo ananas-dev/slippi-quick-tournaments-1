@@ -12,7 +12,7 @@ const create = (players: Player[], size: number): any => {
 
   const rounds = Math.log(size) / Math.log(2) - 1;
   // u(n+1) = u(n) * 1/2
-  const total_matches = size * ((1 - Math.pow(1 / 2, rounds)) / (1 - 1 / 2));
+  const total_matches = (size * ((1 - Math.pow(1 / 2, rounds)) * 2)) / 2;
   const get_matches_number = (round: number, size: number) => size / round / 2;
   for (let i = 0; i < rounds; i++) {}
 
