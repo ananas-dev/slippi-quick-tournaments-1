@@ -23,7 +23,7 @@ wss.on("connection", (ws: WebSocket, req: http.IncomingMessage) => {
     const res = handleMessage(message, "" + req.socket.remoteAddress);
     ws.send(res);
   });
-  ws.send("connected");
+  ws.send("ws connected");
 });
 
 //start our server

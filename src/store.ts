@@ -1,11 +1,25 @@
-import type { Player } from "./types/types";
+import type { Player, Tournament } from "./types/types";
 
 interface GlobalStore {
-    players: Player[]
+    players: Player[],
+    tournaments: Tournament[]
 }
 
 var store : GlobalStore = {
-    players: []
+    players: [],
+    tournaments: [
+        {
+            mode: {
+                best_of: 1,
+                player_number: 16,
+                solo: true
+            },
+            bracket: {
+                matches: []
+            },
+            players: []
+        }
+    ]
 };
 
 export default store;

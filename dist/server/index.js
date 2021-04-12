@@ -21,7 +21,7 @@ wss.on("connection", (ws, req) => {
         const res = handler_1.handleMessage(message, "" + req.socket.remoteAddress);
         ws.send(res);
     });
-    ws.send("connected");
+    ws.send("ws connected");
 });
 //start our server
 server.listen(port, () => {

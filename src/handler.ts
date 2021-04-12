@@ -1,6 +1,6 @@
 import { success, error } from "./responders";
 import store from './store';
-import { connect } from "./commands";
+import { connect, list } from "./commands";
 import type { Player } from "./types/types";
 
 const dataNecessary = JSON.stringify(error("We need some additional information for this command!"));
@@ -23,6 +23,7 @@ export function handleMessage(incoming: string, address : string): string {
           res = error("You are already connected!");
           break;
         }
+        // MVP validation as we don't have access to slippi servers yet
         if (!req.data || !req.data.name || !req.data.connectCode || req.data.name > 15 || req.data.connectCode > 8) {
           res = dataNecessary;
           break;
@@ -34,7 +35,9 @@ export function handleMessage(incoming: string, address : string): string {
           connectCode: req.data.connectCode
         };
         connect(incomingPlayer);
-        res = success("receiving data " + JSON.stringify(store.players))
+        res = success("Connected!");
+      case "list":
+        res = JSON.stringify(success(JSON.stringify(list())))
     }
 
     return JSON.stringify(res);
