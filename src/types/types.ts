@@ -13,7 +13,7 @@ export interface Tournament {
 export interface Player {
   id: string;
   name: string;
-  connect_code: string;
+  connectCode: string;
 }
 
 export interface Match {
@@ -21,7 +21,7 @@ export interface Match {
   players: Player[];
   round: number;
   winner?: Player;
-  next_match?: number;
+  nextMatch?: number;
 }
 
 export interface Bracket {

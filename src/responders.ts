@@ -6,6 +6,7 @@ interface Response {
 export function success(message?: string): Response {
   return {
     type: "success",
+    message: message
   };
 }
 

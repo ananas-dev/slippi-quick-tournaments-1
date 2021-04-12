@@ -1,5 +1,6 @@
 import type { Player } from "./types/types";
+import store from "./store";
 
 export function connect(player: Player) {
-  window.STORE.players?.push(player);
+  store.players.push(player);
 }

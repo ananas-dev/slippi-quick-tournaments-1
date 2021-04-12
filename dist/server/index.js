@@ -3,23 +3,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const http = require("http");
 const WebSocket = require("ws");
+const handler_1 = require("./handler");
+const store_1 = require("./store");
 const app = express();
-//initialize a simple http server
+const port = process.env.PORT || 3000;
 const server = http.createServer(app);
-//initialize the WebSocket server instance
 const wss = new WebSocket.Server({ server });
-wss.on("connection", (ws) => {
-    //connection is up, let's add a simple simple event
-    ws.on("message", (message) => {
-        //log the received message and send it back to the client
-        console.log("received: %s", message);
-        ws.send(`Hello, you sent -> ${message}`);
+wss.on("connection", (ws, req) => {
+    if (!req.socket.remoteAddress) {
+        ws.send("error");
+        return;
+    }
+    ws.on('close', () => {
+        store_1.default.players = store_1.default.players.filter(value => value.id !== req.socket.remoteAddress);
     });
-    //send immediatly a feedback to the incoming connection
-    ws.send("Hi there, I am a WebSocket server");
+    ws.on("message", (message) => {
+        const res = handler_1.handleMessage(message, "" + req.socket.remoteAddress);
+        ws.send(res);
+    });
+    ws.send("connected");
 });
 //start our server
-server.listen(process.env.PORT || 8999, () => {
-    console.log(`:: Server started !`);
+server.listen(port, () => {
+    console.log(`:: Server started on ${port}`);
 });
 //# sourceMappingURL=index.js.map
