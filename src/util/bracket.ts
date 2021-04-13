@@ -3,11 +3,12 @@ import type { Player, Bracket } from "../types/types";
 interface Node<T> {
   pointer: number;
   data?: T;
+  winner?: Node<T>;
   right?: Node<T>;
   left?: Node<T>;
 }
 
-export const create = (players: Player[]): any => {
+export const create = (players: Player[]): Node<Player> => {
   let nodes: Node<Player>[] = [];
   let queue: number[] = [];
   let pointer: number = 0;
@@ -34,5 +35,22 @@ export const create = (players: Player[]): any => {
     queue.push(pointer);
     pointer++;
   }
-  return nodes.pop();
+
+  // Make the type happy
+  const root = nodes.pop();
+  return root ? root : { pointer: 0 };
+};
+
+export const applyResults = (
+  node: Node<Player>,
+  pointer: number,
+  winner: Player
+): void => {
+  if (node.pointer == pointer) {
+    node.data = winner;
+  }
+  if (node.left && node.right) {
+    applyResults(node.left, pointer, winner);
+    applyResults(node.right, pointer, winner);
+  }
 };
