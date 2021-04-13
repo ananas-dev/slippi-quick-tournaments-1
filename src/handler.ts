@@ -3,7 +3,7 @@ import store from './store';
 import { connect, list } from "./commands";
 import type { Player } from "./types/types";
 
-const dataNecessary = JSON.stringify(error("We need some additional information for this command!"));
+const dataNecessary = error("We need some additional information for this command!");
 
 export function handleMessage(incoming: string, address : string): string {
   try {
@@ -24,7 +24,7 @@ export function handleMessage(incoming: string, address : string): string {
           break;
         }
         // MVP validation as we don't have access to slippi servers yet
-        if (!req.data || !req.data.name || !req.data.connectCode || req.data.name > 15 || req.data.connectCode > 8) {
+        if (!req.data || req.data.name?.length > 15 || req.data.connectCode?.length > 8) {
           res = dataNecessary;
           break;
         }
@@ -35,9 +35,15 @@ export function handleMessage(incoming: string, address : string): string {
           connectCode: req.data.connectCode
         };
         connect(incomingPlayer);
-        res = success("Connected!");
+        res = {
+          type: "list",
+          message: JSON.stringify(list())
+        }
       case "list":
-        res = JSON.stringify(success(JSON.stringify(list())))
+        res = {
+          type: "list",
+          message: JSON.stringify(list())
+        }
     }
 
     return JSON.stringify(res);
