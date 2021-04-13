@@ -20,7 +20,10 @@ export function handleMessage(incoming: string, address : string): string {
     switch (req.command) {
       case "connect":
         if (store.players.some(value => value.id === address)) {
-          res = error("You are already connected!");
+          res = {
+            type: "list",
+            message: list()
+          };
           break;
         }
         // MVP validation as we don't have access to slippi servers yet
@@ -37,13 +40,15 @@ export function handleMessage(incoming: string, address : string): string {
         connect(incomingPlayer);
         res = {
           type: "list",
-          message: JSON.stringify(list())
-        }
+          message: list()
+        };
+        break;
       case "list":
         res = {
           type: "list",
-          message: JSON.stringify(list())
-        }
+          message: list()
+        };
+        break;
     }
 
     return JSON.stringify(res);

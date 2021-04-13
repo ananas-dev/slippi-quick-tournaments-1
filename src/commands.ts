@@ -6,5 +6,7 @@ export function connect(player: Player) {
 }
 
 export function list() {
-  return store.tournaments.map(tournament => [tournament.mode, tournament.players.length]);
+  return store.tournaments.map(tournament => [
+    tournament.mode, tournament.players.length
+  ]);
 }

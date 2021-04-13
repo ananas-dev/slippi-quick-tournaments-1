@@ -1,7 +1,7 @@
 export interface TournamentMode {
-  best_of: number;
+  bestOf: number;
   solo: boolean;
-  player_number: number;
+  players: number;
 }
 
 export interface Tournament {

@@ -10,8 +10,8 @@ var store : GlobalStore = {
     tournaments: [
         {
             mode: {
-                best_of: 1,
-                player_number: 16,
+                bestOf: 1,
+                players: 16,
                 solo: true
             },
             bracket: {
