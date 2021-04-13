@@ -1,39 +1,38 @@
 import type { Player, Bracket } from "../types/types";
 
 interface Node<T> {
-  pointer?: number;
+  pointer: number;
   data?: T;
   right?: Node<T>;
   left?: Node<T>;
 }
 
-const create = (players: Player[], size: number): any => {
-  if (size <= players.length) return;
-
-  // ensure to only have the desired number
-  players = players.slice(0, size - 1);
-
+export const create = (players: Player[]): any => {
   let nodes: Node<Player>[] = [];
   let queue: number[] = [];
+  let pointer: number = 0;
 
-  players.map((player: Player, iter: number) => {
+  players.map((player: Player) => {
     nodes.push({
-      pointer: iter,
+      pointer: pointer,
       data: player,
     });
-    queue.push(iter);
+    queue.push(pointer);
+    pointer++;
   });
 
   while (queue.length > 1) {
-    let left = queue.pop();
-    let right = queue.pop();
+    let left = queue.shift();
+    let right = queue.shift();
 
     nodes.push({
-      pointer: queue.length,
-      left: nodes[left || 0],
-      right: nodes[right || 0],
+      pointer: pointer,
+      left: left != undefined ? nodes[left] : undefined,
+      right: right != undefined ? nodes[right] : undefined,
     });
 
-    queue.push(queue.length);
+    queue.push(pointer);
+    pointer++;
   }
+  return nodes.pop();
 };
