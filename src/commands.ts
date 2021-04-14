@@ -1,4 +1,4 @@
-import type { Player, TournamentMode } from "./types/types";
+import type { Player, Tournament, TournamentMode } from "./types/types";
 import equal from "fast-deep-equal";
 import store from "./store";
 
@@ -16,6 +16,10 @@ export function list() : (number | TournamentMode)[][] {
 
 // Queue into tournament
 export function queue(player: Player, mode: TournamentMode): boolean {
+  // Already in queue?
+  if (getTournamentOfPlayer(player))
+    return false;
+
   var tournament = store.tournaments.find(tournament => equal(tournament.mode, mode));
 
   if (!tournament)
@@ -26,7 +30,7 @@ export function queue(player: Player, mode: TournamentMode): boolean {
 
 // Dequeue from tournament
 export function dequeue(player: Player): boolean {
-  var tournament = store.tournaments.find(tournament => tournament.players.some(entry => entry.id === player.id));
+  var tournament = getTournamentOfPlayer(player);
   if (!tournament)
     return false;
 
@@ -38,4 +42,8 @@ export function dequeue(player: Player): boolean {
 
 export function cancel() {
 
+}
+
+function getTournamentOfPlayer(player: Player): Tournament | undefined {
+  return store.tournaments.find(tournament => tournament.players.some(entry => entry.id === player.id));
 }
