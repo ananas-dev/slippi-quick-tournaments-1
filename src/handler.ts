@@ -1,9 +1,12 @@
-import { success, error } from "./responders";
+import { error } from "./responders";
 import store from './store';
-import { connect, list } from "./commands";
+import { connect, list, queue, dequeue } from "./commands";
 import type { Player } from "./types/types";
+import { isTournamentMode } from "./types/types"
 
 const dataNecessary = error("We need some additional information for this command!");
+const notConnected = error("You are not connected!");
+const getPlayerFromId = (id: string) => store.players.find(value => value.id === id);
 
 export function handleMessage(incoming: string, address : string): string {
   try {
@@ -19,7 +22,7 @@ export function handleMessage(incoming: string, address : string): string {
 
     switch (req.command) {
       case "connect":
-        if (store.players.some(value => value.id === address)) {
+        if (getPlayerFromId(address)) {
           res = {
             type: "list",
             message: list()
@@ -44,11 +47,51 @@ export function handleMessage(incoming: string, address : string): string {
         };
         break;
       case "list":
+        var player = getPlayerFromId(address);
+        if (!player) {
+          res = notConnected;
+          break;
+        }
         res = {
           type: "list",
-          message: list()
+          message: list(),
+          inqueue: store.tournaments.find(tournament => tournament.players.some(player => player.id === address))?.mode
         };
         break;
+      case "queue":
+        var player = getPlayerFromId(address);
+        if (!player) {
+          res = notConnected;
+          break;
+        }
+        if (!req.data || !isTournamentMode(req.data)) {
+          res = dataNecessary;
+          break;
+        }
+
+        queue(player, req.data);
+        res = {
+          type: "queued",
+          message: list(),
+          mode: req.data
+        };
+        break;
+      case "dequeue":
+        var player = getPlayerFromId(address);
+        if (!player) {
+          res = notConnected;
+          break;
+        }
+
+        const result = dequeue(player);
+        if (result) {
+          res = {
+            type: "dequeued",
+            message: list()
+          }
+        } else {
+          res = error("Couldn't dequeue from tournament!");
+        }
     }
 
     return JSON.stringify(res);

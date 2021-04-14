@@ -5,6 +5,7 @@ interface GlobalStore {
     tournaments: Tournament[]
 }
 
+// Default tournaments, will change it soon
 var store : GlobalStore = {
     players: [],
     tournaments: [

@@ -1,4 +1,4 @@
-import * as express from "express";
+import express = require("express");
 import * as http from "http";
 import * as WebSocket from "ws";
 import { handleMessage } from "./handler";
@@ -16,7 +16,13 @@ wss.on("connection", (ws: WebSocket, req: http.IncomingMessage) => {
   }
 
   ws.on('close', () => {
-    store.players = store.players.filter(value => value.id !== req.socket.remoteAddress);
+    const address = req.socket.remoteAddress;
+
+    // Remove player from system and from tournaments he is in
+    store.players = store.players.filter(value => value.id !== address);
+    for (var tournament of store.tournaments) {
+      tournament.players = tournament.players.filter(player => player.id !== address);
+    }
   })
 
   ws.on("message", (message: string) => {
